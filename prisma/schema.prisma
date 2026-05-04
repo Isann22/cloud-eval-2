@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../server/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model laporan_kerusakan {
+  id          Int      @id @default(autoincrement())
+  judul       String
+  deskripsi   String
+  lokasi      String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+}
