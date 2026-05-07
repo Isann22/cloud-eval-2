@@ -15,8 +15,8 @@ RUN bun install --frozen-lockfile --ignore-scripts
 # Copy the rest of the source code
 COPY . .
 
-
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" ./node_modules/.bin/prisma generate
+# Generate Prisma client (skipped by --ignore-scripts above)
+RUN ./node_modules/.bin/prisma generate
 
 # Build with Nitro bun preset — optimizes output for bun runtime
 ENV NITRO_PRESET=bun
