@@ -16,7 +16,8 @@ RUN bun install --frozen-lockfile --ignore-scripts
 COPY . .
 
 # Generate Prisma client (skipped by --ignore-scripts above)
-RUN bun run db:generate
+# Call prisma generate directly — no DATABASE_URL needed at codegen time
+RUN ./node_modules/.bin/prisma generate
 
 # Build with Nitro bun preset — optimizes output for bun runtime
 ENV NITRO_PRESET=bun
