@@ -15,9 +15,8 @@ RUN bun install --frozen-lockfile --ignore-scripts
 # Copy the rest of the source code
 COPY . .
 
-# Generate Prisma client (skipped by --ignore-scripts above)
-# Call prisma generate directly — no DATABASE_URL needed at codegen time
-RUN ./node_modules/.bin/prisma generate
+
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy" ./node_modules/.bin/prisma generate
 
 # Build with Nitro bun preset — optimizes output for bun runtime
 ENV NITRO_PRESET=bun
@@ -31,8 +30,18 @@ WORKDIR /app
 # Add CA certificates so TLS connections to RDS work inside Alpine container
 RUN apk add --no-cache ca-certificates
 
-# Only copy the self-contained Nitro output — no source code or node_modules
+# Copy Nitro server output
 COPY --from=build /app/.output ./
+
+# Copy package.json, lockfile, and node_modules for db:deploy (prisma migrate + generate)
+COPY --from=build /app/package.json /app/bun.lock ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/prisma.config.ts ./
+
+# Copy entrypoint script
+COPY entrypoint.sh ./
+RUN chmod +x entrypoint.sh
 
 # Set NODE_ENV production agar Vue Router dan dependency lain strip dev warnings
 ENV NODE_ENV=production
@@ -42,5 +51,5 @@ USER bun
 
 EXPOSE 3000
 
-# Use --bun flag to ensure all module resolution uses bun runtime (not Node.js)
-ENTRYPOINT ["bun", "--bun", "run", "/app/server/index.mjs"]
+# Run migrations then start the server
+ENTRYPOINT ["./entrypoint.sh"]

@@ -14,7 +14,8 @@
     "db:generate": "bun --env-file=.env ./node_modules/.bin/prisma generate",
     "db:push": "bun --env-file=.env ./node_modules/.bin/prisma db push",
     "db:migrate": "bun --env-file=.env ./node_modules/.bin/prisma migrate dev",
-    "db:seed": "bun --env-file=.env ./node_modules/.bin/prisma db seed"
+    "db:seed": "bun --env-file=.env ./node_modules/.bin/prisma db seed",
+    "db:deploy": "npx prisma migrate deploy && npx prisma generate"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1041.0",
