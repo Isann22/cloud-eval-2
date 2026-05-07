@@ -9,7 +9,7 @@ export function useUpload() {
   const uploadError = ref<string | null>(null);
 
   /**
-   * Upload a file to /api/upload and return the public S3 URL.
+   * Upload a file to /api/upload and return the public CloudFront CDN URL.
    * Returns null if the upload fails.
    */
   async function uploadFile(file: File): Promise<string | null> {

@@ -27,3 +27,4 @@ server/generated
 .agent
 .kiro
 openspec/*
+docs/*

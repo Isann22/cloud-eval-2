@@ -9,6 +9,9 @@ if (!databaseUrl) {
 
 const adapter = new PrismaPg({
   connectionString: databaseUrl,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 const prisma = new PrismaClient({ adapter });

@@ -21,14 +21,11 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Derive extension from the original filename or content-type
   const originalName = filePart.filename ?? "upload";
   const ext = originalName.includes(".")
     ? originalName.split(".").pop()
     : "bin";
   const key = `${randomUUID()}.${ext}`;
-
-  const region = process.env.AWS_REGION!;
 
   await s3Client.send(
     new PutObjectCommand({
@@ -39,7 +36,8 @@ export default defineEventHandler(async (event) => {
     }),
   );
 
-  const url = `https://${S3_BUCKET_NAME}.s3.${region}.amazonaws.com/${key}`;
+  const cloudflareDomain = process.env.CLOUDFLARE_DOMAIN;
+  const url = `https://${cloudflareDomain}/${key}`;
 
   return { success: true, url };
 });
