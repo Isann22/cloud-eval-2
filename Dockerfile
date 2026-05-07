@@ -15,6 +15,9 @@ RUN bun install --frozen-lockfile --ignore-scripts
 # Copy the rest of the source code
 COPY . .
 
+# Generate Prisma client (skipped by --ignore-scripts above)
+RUN bun run db:generate
+
 # Build with Nitro bun preset — optimizes output for bun runtime
 ENV NITRO_PRESET=bun
 RUN bun run build
